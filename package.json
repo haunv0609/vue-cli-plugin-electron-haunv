@@ -1,0 +1,20 @@
+{
+  "name": "vue-cli-plugin-electron-haunv",
+  "version": "1.0.12",
+  "main": "index.js",
+  "license": "MIT",
+  "keywords": [
+    "vue-cli-plugin"
+  ],
+  "files": [
+    "generator",
+    "bin",
+    "index.js"
+  ],
+  "dependencies": {
+    "chokidar": "latest",
+    "get-port": "latest",
+    "tree-kill": "latest",
+    "wait-on": "latest"
+  }
+}
