@@ -44,7 +44,8 @@ module.exports = (api) => {
 
         devDependencies: {
             electron: `^${electronVersion}`,
-            "electron-builder": `^${builderVersion}`
+            "electron-builder": `^${builderVersion}`,
+            "@tomjs/electron-devtools-installer": "^4.0.1"
         }
 
     })

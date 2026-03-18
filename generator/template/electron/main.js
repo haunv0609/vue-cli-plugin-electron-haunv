@@ -1,6 +1,8 @@
 const { app, BrowserWindow } = require("electron")
 const path = require("path")
+const { installExtension, VUEJS_DEVTOOLS } = require('@tomjs/electron-devtools-installer');
 
+const isDevelopment = process.env.NODE_ENV !== 'production'
 function createWindow() {
 
     const win = new BrowserWindow({
@@ -24,7 +26,16 @@ function createWindow() {
     }
 }
 
-app.whenReady().then(createWindow)
+app.whenReady().then(async () => {
+
+    if (isDevelopment && !process.env.IS_TEST) {
+        installExtension(VUEJS_DEVTOOLS)
+        .then(ext => console.log(`Added Extension:  ${ext.name}`))
+        .catch(err => console.log('An error occurred: ', err));
+    }
+
+    createWindow()
+})
 
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") app.quit()
