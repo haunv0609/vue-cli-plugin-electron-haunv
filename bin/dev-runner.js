@@ -8,7 +8,7 @@ const electron = require("electron")
 let electronProcess
 let port
 
-function waitForServer(url, { interval = 250, timeout = 30000 } = {}) {
+function waitForServer(url, { interval = 500, timeout = 60000 } = {}) {
     return new Promise((resolve, reject) => {
         const deadline = Date.now() + timeout
 
@@ -16,7 +16,7 @@ function waitForServer(url, { interval = 250, timeout = 30000 } = {}) {
             http.get(url, (res) => {
                 res.resume()
                 resolve()
-            }).on("error", () => {
+            }).on("error", (err) => {
                 if (Date.now() >= deadline) {
                     reject(new Error(`Timeout waiting for ${url}`))
                 } else {
@@ -25,7 +25,7 @@ function waitForServer(url, { interval = 250, timeout = 30000 } = {}) {
             })
         }
 
-        poll()
+        setTimeout(poll, 1000)
     })
 }
 
