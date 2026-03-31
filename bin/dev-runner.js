@@ -1,5 +1,5 @@
 const { spawn } = require("child_process")
-const waitOn = require("wait-on")
+const http = require("http")
 const getPort = require("get-port").default
 const chokidar = require("chokidar")
 const kill = require("tree-kill")
@@ -8,13 +8,32 @@ const electron = require("electron")
 let electronProcess
 let port
 
-async function run() {
+function waitForServer(url, { interval = 250, timeout = 30000 } = {}) {
+    return new Promise((resolve, reject) => {
+        const deadline = Date.now() + timeout
 
+        function poll() {
+            http.get(url, (res) => {
+                res.resume()
+                resolve()
+            }).on("error", () => {
+                if (Date.now() >= deadline) {
+                    reject(new Error(`Timeout waiting for ${url}`))
+                } else {
+                    setTimeout(poll, interval)
+                }
+            })
+        }
+
+        poll()
+    })
+}
+
+async function run() {
     port = await getPort({
         port: [8080, 8081, 8082]
     })
 
-    // chạy vue dev server
     spawn(
         "npm",
         ["run", "serve", "--", "--port", port],
@@ -24,15 +43,10 @@ async function run() {
         }
     )
 
-    // đợi vue ready
-    await waitOn({
-        resources: [`http://localhost:${port}`]
-    })
+    await waitForServer(`http://localhost:${port}`)
 
-    // chạy electron
     startElectron()
 
-    // hot reload electron
     chokidar
         .watch(["electron"], { ignoreInitial: true })
         .on("all", () => {
@@ -42,8 +56,8 @@ async function run() {
 
 function startElectron() {
     electronProcess = spawn(
-            electron,
-            ["."],
+        electron,
+        ["."],
         {
             stdio: "inherit",
             env: {

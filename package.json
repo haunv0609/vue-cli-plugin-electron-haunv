@@ -1,6 +1,6 @@
 {
   "name": "vue-cli-plugin-electron-haunv",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "main": "index.js",
   "license": "MIT",
   "keywords": [
@@ -18,8 +18,7 @@
   "dependencies": {
     "chokidar": "latest",
     "get-port": "latest",
-    "tree-kill": "latest",
-    "wait-on": "latest"
+    "tree-kill": "latest"
   },
   "devDependencies": {
     "@tomjs/electron-devtools-installer": "^4.0.1"
